@@ -17,13 +17,13 @@ const rl = readline.createInterface({
 });
 
 function createUser() {
-  rl.question('Enter name: ', (name) => {
-    rl.question('Enter email: ', (email) => {
+  rl.question('Unesi ime: ', (name) => {
+    rl.question('Unesi email: ', (email) => {
       client.CreateUser({ name, email }, (err, response) => {
         if (err) {
-          console.error('Error creating user:', err.message);
+          console.error('Error pri kreiranju korisnika:', err.message);
         } else {
-          console.log('User created:', response);
+          console.log('Korisnik kreiran:', response);
         }
         showMenu();
       });
@@ -36,7 +36,7 @@ function listUsers() {
     if (err) {
       console.error('Error fetching users:', err.message);
     } else {
-      console.log('User list:');
+      console.log('Lista korisnika:');
       response.users.forEach((u) => {
         console.log(`- [${u.id}] ${u.name} <${u.email}>`);
       });
@@ -45,9 +45,26 @@ function listUsers() {
   });
 }
 
+function deleteUser() {
+  rl.question('Unesi ID korisnika kog zelis da obrises: ', (id) => {
+    client.DeleteUser({ id: parseInt(id) }, (err, _) => {
+      if (err) {
+        console.error('Error pri brisanju:', err.message);
+      } else {
+        console.log(`Korisnik sa ID-om ${id} obrisan.`);
+      }
+      showMenu();
+    });
+  });
+
+}
+
 function showMenu() {
-  console.log('\n1. Create user\n2. List users\n0. Exit');
-  rl.question('Choose option: ', (choice) => {
+  console.log('1. Kreiraj korisnika ');
+  console.log('2. Lista korisnika ');
+  console.log('3. Obrisi korisnika ');
+  console.log('0. Exit');
+  rl.question('Izaberi opciju: ', (choice) => {
     switch (choice) {
       case '1':
         createUser();
@@ -55,11 +72,14 @@ function showMenu() {
       case '2':
         listUsers();
         break;
+      case '3':
+        deleteUser();
+        break;
       case '0':
         rl.close();
         break;
       default:
-        console.log('Invalid option');
+        console.log('Nepostojeca opcija ');
         showMenu();
     }
   });
