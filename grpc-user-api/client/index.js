@@ -34,8 +34,10 @@ function createUser() {
 function listUsers() {
   client.GetUsers({}, (err, response) => {
     if (err) {
-      console.error('Error fetching users:', err.message);
-    } else {
+      console.error('Greska:', err.message);
+    } else if(!response.users){
+      console.log('Nema korisnika za prikazivanje.')
+    }else {
       console.log('Lista korisnika:');
       response.users.forEach((u) => {
         console.log(`- [${u.id}] ${u.name} <${u.email}>`);
